@@ -9,7 +9,5 @@ namespace WebApi.Brokers.Storages
         ValueTask<Student> SelectStudentByIdAsync(Guid studentId);
         ValueTask<Student> UpdateStudentAsync(Student student);
         ValueTask<Student> DeleteStudentAsync(Student student);
-
-        Task<IQueryable<Student>> SelectStudentsOrderedByAgeAsync(bool ascending = true);
     }
 }

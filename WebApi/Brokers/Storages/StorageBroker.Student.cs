@@ -21,15 +21,5 @@ namespace WebApi.Brokers.Storages
 
         public async ValueTask<Student> DeleteStudentAsync(Student student) =>
             await DeleteAsync(student);
-
-
-        public async Task<IQueryable<Student>> SelectStudentsOrderedByAgeAsync(bool ascending = true)
-        {
-            var query = ascending
-                ? Students.OrderBy(student => student.Age)
-                : Students.OrderByDescending(student => student.Age);
-
-            return await Task.FromResult(query);
-        }
     }
 }
