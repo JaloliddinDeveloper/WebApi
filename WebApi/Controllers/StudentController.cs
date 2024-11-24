@@ -22,12 +22,12 @@ namespace WebApi.Controllers
             {
                 List<Student> studentsToInsert = new List<Student>();
 
-                for (int i = 0; i < 400; i++)
+                for (int i = 0; i < 50; i++)
                 {
                     var student = new Student
                     {
                         FullName = "Student" + i,  
-                        Age = new Random().Next(18, 25) 
+                        Age = new Random().Next(18, 40) 
                     };
 
                     studentsToInsert.Add(student);
