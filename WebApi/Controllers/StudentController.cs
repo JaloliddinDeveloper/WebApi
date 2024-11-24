@@ -13,15 +13,32 @@ namespace WebApi.Controllers
 
         public StudentController(IStorageBroker storageBroker)=>
             this.storageBroker = storageBroker;
-        
+
 
         [HttpPost]
-        public async ValueTask<ActionResult<Student>> PostGuestAsync(Student student)
+        public async ValueTask<ActionResult<IEnumerable<Student>>> PostRandomStudentsAsync()
         {
             try
             {
-                Student postedStudent = await this.storageBroker.InsertStudentAsync(student);
-                return Created(postedStudent);
+                List<Student> studentsToInsert = new List<Student>();
+
+                for (int i = 0; i < 400; i++)
+                {
+                    var student = new Student
+                    {
+                        FullName = "Student" + i,  
+                        Age = new Random().Next(18, 25) 
+                    };
+
+                    studentsToInsert.Add(student);
+                }
+
+                foreach (var student in studentsToInsert)
+                {
+                    await this.storageBroker.InsertStudentAsync(student);
+                }
+
+                return CreatedAtAction(nameof(PostRandomStudentsAsync), studentsToInsert);
             }
             catch (Exception ex)
             {
