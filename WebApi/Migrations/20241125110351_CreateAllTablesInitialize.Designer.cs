@@ -11,7 +11,7 @@ using WebApi.Brokers.Storages;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(StorageBroker))]
-    [Migration("20241124202821_CreateAllTablesInitialize")]
+    [Migration("20241125110351_CreateAllTablesInitialize")]
     partial class CreateAllTablesInitialize
     {
         /// <inheritdoc />
