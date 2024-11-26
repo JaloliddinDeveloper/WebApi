@@ -13,7 +13,7 @@ namespace WebApi.Brokers.Storages
         public async ValueTask<IQueryable<Student>> SelectAllStudentsAsync() =>
             await SelectAllAsync<Student>();
 
-        public async ValueTask<Student> SelectStudentByIdAsync(Guid studentId) =>
+        public async ValueTask<Student> SelectStudentByIdAsync(int studentId) =>
             await SelectAsync<Student>(studentId);
 
         public async ValueTask<Student> UpdateStudentAsync(Student student) =>

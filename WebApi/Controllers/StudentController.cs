@@ -2,6 +2,7 @@
 using RESTFulSense.Controllers;
 using WebApi.Brokers.Storages;
 using WebApi.Models.Foundations.Students;
+using WebApi.Services.Foundations.Students;
 
 namespace WebApi.Controllers
 {
@@ -10,22 +11,41 @@ namespace WebApi.Controllers
     public class StudentController : RESTFulController
     {
         private readonly IStorageBroker storageBroker;
+        private readonly IStudentService studentService;
+        private readonly IWebHostEnvironment webHostEnvironment;
 
-        public StudentController(IStorageBroker storageBroker) =>
+        public StudentController(
+            IStorageBroker storageBroker,
+            IStudentService studentService,
+            IWebHostEnvironment webHostEnvironment)
+        {
             this.storageBroker = storageBroker;
+            this.studentService = studentService;
+            this.webHostEnvironment = webHostEnvironment;
+        }
 
         [HttpPost]
-        public async ValueTask<ActionResult<Student>> PostStudentAsync(Student student)
+        public async Task<ActionResult<Student>> PostStudent([FromForm] Student Student, IFormFile picture)
         {
-            try
+            if (picture != null)
             {
-                Student postedStudent = await this.storageBroker.InsertStudentAsync(student);
-                return Created(postedStudent);
+                string uploadsFolder = Path.Combine(this.webHostEnvironment.WebRootPath, "images");
+                Directory.CreateDirectory(uploadsFolder);
+
+                string fileName = Guid.NewGuid().ToString() + Path.GetExtension(picture.FileName);
+                string filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    await picture.CopyToAsync(fileStream);
+                }
+
+                Student.PictureUrl = $"images/{fileName}";
             }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+
+            await this.storageBroker.InsertStudentAsync(Student);
+
+            return Created(Student);
         }
 
         [HttpGet]
@@ -44,7 +64,7 @@ namespace WebApi.Controllers
         }
 
         [HttpGet("{studentId}")]
-        public async Task<ActionResult<Student>> GetStudentById(Guid studentId)
+        public async Task<ActionResult<Student>> GetStudentById(int studentId)
         {
             try
             {
@@ -67,6 +87,20 @@ namespace WebApi.Controllers
 
                 return Ok(modifiedStudent);
             }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{studentId}")]
+        public async ValueTask<ActionResult<Student>> DeleteStudentByIdAsync(int studentId)
+        {
+            try
+            {
+                return await this.studentService.RemoveStudentByIdAsync(studentId);
+            }
+
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);

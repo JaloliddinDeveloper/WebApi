@@ -1,5 +1,6 @@
 using WebApi.Brokers.Storages;
 using Microsoft.AspNetCore.HttpOverrides;
+using WebApi.Services.Foundations.Students;
 
 public class Program
 {
@@ -10,6 +11,8 @@ public class Program
         builder.Services.AddControllers();
 
         builder.Services.AddTransient<IStorageBroker, StorageBroker>();
+
+        builder.Services.AddTransient<IStudentService, StudentService>();
 
         builder.Services.AddEndpointsApiExplorer();
 
@@ -26,6 +29,8 @@ public class Program
         });
 
         var app = builder.Build();
+
+        app.UseStaticFiles();
 
         if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
         {
