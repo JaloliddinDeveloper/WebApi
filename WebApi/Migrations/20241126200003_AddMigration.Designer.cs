@@ -11,8 +11,8 @@ using WebApi.Brokers.Storages;
 namespace WebApi.Migrations
 {
     [DbContext(typeof(StorageBroker))]
-    [Migration("20241126182944_AddPicture")]
-    partial class AddPicture
+    [Migration("20241126200003_AddMigration")]
+    partial class AddMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
