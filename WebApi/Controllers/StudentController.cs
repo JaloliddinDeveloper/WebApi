@@ -25,7 +25,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Student>> PostStudent([FromForm] Student Student, IFormFile picture)
+        public async ValueTask<ActionResult<Student>> PostStudent([FromForm] Student Student, IFormFile picture)
         {
             if (picture != null)
             {
