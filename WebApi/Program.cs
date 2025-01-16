@@ -11,7 +11,7 @@ public class Program
 
         builder.WebHost.ConfigureKestrel(options =>
         {
-            options.Listen(IPAddress.Any, 5000);  // Web loyihasi uchun port
+            options.Listen(IPAddress.Any, 5000); 
         });
 
         builder.Services.AddControllers();
@@ -36,7 +36,7 @@ public class Program
         });
 
         var app = builder.Build();
-
+        app.UsePathBase("/api");
         app.UseStaticFiles();
 
         if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
