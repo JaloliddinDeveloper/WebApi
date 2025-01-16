@@ -12,24 +12,21 @@ namespace WebApi.Controllers
     {
         private readonly IStorageBroker storageBroker;
         private readonly IStudentService studentService;
-        private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly string uploadsFolder = "/var/www/pictures";
 
         public StudentController(
-            IStorageBroker storageBroker,
-            IStudentService studentService,
-            IWebHostEnvironment webHostEnvironment)
+            IStorageBroker storageBroker, 
+            IStudentService studentService)
         {
             this.storageBroker = storageBroker;
             this.studentService = studentService;
-            this.webHostEnvironment = webHostEnvironment;
         }
 
         [HttpPost]
-        public async ValueTask<ActionResult<Student>> PostStudent([FromForm] Student Student, IFormFile picture)
+        public async ValueTask<ActionResult<Student>> PostStudent([FromForm] Student student, IFormFile picture)
         {
             if (picture != null)
             {
-                string uploadsFolder = Path.Combine(this.webHostEnvironment.WebRootPath, "images");
                 Directory.CreateDirectory(uploadsFolder);
 
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(picture.FileName);
@@ -40,13 +37,13 @@ namespace WebApi.Controllers
                     await picture.CopyToAsync(fileStream);
                 }
 
-                Student.PictureUrl = $"images/{fileName}";
+                student.PictureUrl = $"pictures/{fileName}";
             }
 
-            await this.storageBroker.InsertStudentAsync(Student);
+            await this.storageBroker.InsertStudentAsync(student);
 
-            return Created(Student);
-        }
+            return Created(student);
+        } 
 
         [HttpGet]
         public async ValueTask<ActionResult<IQueryable<Student>>> GetAllStudentsAsync()
