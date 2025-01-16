@@ -1,18 +1,12 @@
 using WebApi.Brokers.Storages;
 using Microsoft.AspNetCore.HttpOverrides;
 using WebApi.Services.Foundations.Students;
-using System.Net;
 
 public class Program
 {
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
-        builder.WebHost.ConfigureKestrel(options =>
-        {
-            options.Listen(IPAddress.Any, 5000); 
-        });
 
         builder.Services.AddControllers();
 
@@ -26,7 +20,6 @@ public class Program
 
         builder.Services.AddCors(options =>
         {
-
             options.AddPolicy("AllowAll", policy =>
             {
                 policy.AllowAnyOrigin()
@@ -36,7 +29,7 @@ public class Program
         });
 
         var app = builder.Build();
-        app.UsePathBase("/api");
+
         app.UseStaticFiles();
 
         if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
