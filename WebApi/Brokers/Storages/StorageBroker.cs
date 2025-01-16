@@ -14,8 +14,14 @@ namespace WebApi.Brokers.Storages
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-         optionsBuilder.UseSqlite("Data Source=storage.db");
+
+            string connection =
+                this.configuration.GetConnectionString("DefaultConnection");
+
+            optionsBuilder.UseMySql(connection,
+                ServerVersion.AutoDetect(connection));
         }
+
         private async ValueTask<T> InsertAsync<T>(T @object)
         {
             Entry(@object).State = EntityState.Added;
