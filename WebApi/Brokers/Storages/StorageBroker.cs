@@ -14,12 +14,9 @@ namespace WebApi.Brokers.Storages
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            string connection = this.configuration.GetConnectionString("DefaultConnection");
 
-            string connection =
-                this.configuration.GetConnectionString("DefaultConnection");
-
-            optionsBuilder.UseMySql(connection,
-                ServerVersion.AutoDetect(connection));
+            optionsBuilder.UseNpgsql(connection);
         }
 
         private async ValueTask<T> InsertAsync<T>(T @object)
